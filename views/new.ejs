@@ -1,0 +1,55 @@
+<% layout('boilerplate') -%>
+
+    <body>
+        <div class="row">
+            <div class="col-8 offset-2">
+                <br>
+                <h3>Create a New Listing</h3><br>
+                <form action="/listings" method="post">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" name="title" placeholder="Add a catchy title" id="title" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" id="description" placeholder="give description..."
+                            class="form-control"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image Link</label>
+                        <input type="text" name="image" id="image" placeholder="attach image URL/Link"
+                            class="form-control">
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-md-4 col-12">
+                            <div class="mb-3 ">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" name="price" id="price" placeholder="1200"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="col col-md-8 col-12">
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" name="location" id="location" placeholder="Jaipur, Rajasthan"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" id="country" name="country" placeholder="India"
+                            class="form-control"><br>
+                    </div>
+
+                    <button class="btn btn-dark" style="border: none; background-color: #fe424d;">Add</button>
+                    <br>
+                    <br>
+                </form>
+            </div>
+        </div>
+
+
+    </body>
