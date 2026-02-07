@@ -19,8 +19,11 @@ main().then((res)=>{
 .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+//   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+  await mongoose.connect(process.env.MONGO_URL);
 }
+
+const port= process.env.PORT || 8080
 
 
 // app.get("/testListing", async (req,res)=>{
@@ -99,6 +102,6 @@ app.delete("/listings/:id", async (req,res)=>{
     res.redirect("/listings")
 })
 
-app.listen(8080,()=>{
-    console.log("app listening on port 8080")
+app.listen(port,()=>{
+    console.log(`app listening on port ${port}`)
 })
