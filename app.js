@@ -19,11 +19,10 @@ main().then((res)=>{
 .catch(err => console.log(err));
 
 async function main() {
-//   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
-  await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
 }
 
-const port= process.env.PORT || 8080
+const port= 8080
 
 
 // app.get("/testListing", async (req,res)=>{
