@@ -11,7 +11,7 @@ async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
 }
 
-
+//here we are inserting the data inside Listing table
 const initDB= async ()=>{
     await Listing.deleteMany({});
     await Listing.insertMany(initData.data)
