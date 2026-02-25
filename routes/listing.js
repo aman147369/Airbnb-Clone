@@ -4,6 +4,7 @@ const wrapAsync=require("../utils/wrapAsync.js")
 const ExpressError=require("../utils/ExpressError.js")
 const {listingSchema} =require("../schema.js")
 const Listing=require("../models/listing.js")
+const { isLoggedIn, isOwner }=require("../middleware.js")
 
 const validateListing=(req,res,next)=>{
     let {error}=listingSchema.validate(req.body)
@@ -27,8 +28,9 @@ router.get("/", wrapAsync(async (req,res)=>{
     res.render("index.ejs", {allListings})
 }))
 
-//show from to create new listing
-router.get("/new", (req,res)=>{
+//show from to create new listing, here we are using isLoggedIn middleware to check whether user is registered in passport
+router.get("/new", isLoggedIn ,(req,res)=>{
+    
     res.render("new.ejs")
 })
 
@@ -37,7 +39,7 @@ router.get("/new", (req,res)=>{
 //With populate() → You get the full comments.
 router.get("/:id", wrapAsync(async (req,res)=>{
     let {id}=req.params;
-    const listing=await Listing.findById(id).populate("reviews")  //before populate it will only show the review id's , if we add populate(reviews) it will show the actual review data
+    const listing=await Listing.findById(id).populate({path:"reviews", populate:{path:"author"} }).populate("owner")  //before populate it will only show the review id's , if we add populate(reviews) it will show the actual review data
     if(!listing){
         req.flash("error","Listing you requested for does not exist!")
         return res.redirect("/listings") 
@@ -46,9 +48,10 @@ router.get("/:id", wrapAsync(async (req,res)=>{
 }))
 
 //save new listing to db and show it in /listings
-router.post("/", validateListing ,wrapAsync(async (req,res,next)=>{
+router.post("/", isLoggedIn ,validateListing ,wrapAsync(async (req,res,next)=>{
    
     const newListing=new Listing(req.body.listing);
+    newListing.owner=req.user._id
     await newListing.save();
     req.flash("success","New Listing Created!");
     res.redirect("/listings")
@@ -73,7 +76,7 @@ router.post("/", validateListing ,wrapAsync(async (req,res,next)=>{
 }))
 
 //edit a listing
-router.get("/:id/edit", wrapAsync(async (req,res)=>{
+router.get("/:id/edit", isLoggedIn, isOwner ,wrapAsync(async (req,res)=>{
     let {id}=req.params;
     let listing = await Listing.findById(id)
     if(!listing){
@@ -84,7 +87,7 @@ router.get("/:id/edit", wrapAsync(async (req,res)=>{
 }))
 
 //updating the listing
-router.put("/:id", validateListing ,wrapAsync(async (req,res)=>{
+router.put("/:id", isLoggedIn, isOwner ,validateListing ,wrapAsync(async (req,res)=>{
     
     let {id}=req.params
     await Listing.findByIdAndUpdate(id, {...req.body.listing})
@@ -94,7 +97,7 @@ router.put("/:id", validateListing ,wrapAsync(async (req,res)=>{
 
 //delete listing
 //when listing is deleted then findOneAndDelete middleware function will be called
-router.delete("/:id", wrapAsync(async (req,res)=>{
+router.delete("/:id", isLoggedIn , isOwner ,wrapAsync(async (req,res)=>{
     let {id}=req.params;
     let deletedListing=await Listing.findByIdAndDelete(id)
     console.log(deletedListing)

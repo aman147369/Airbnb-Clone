@@ -13,8 +13,13 @@ const Review=require("./models/review.js")
 const flash=require("connect-flash")
 const session=require("express-session")
 
-const listings=require("./routes/listing.js")
-const reviews=require("./routes/review.js")
+const passport=require("passport")
+const LocalStrategy=require("passport-local")
+const User=require("./models/user.js")
+
+const listingRouter=require("./routes/listing.js")
+const reviewRouter=require("./routes/review.js")
+const userRouter=require("./routes/user.js")
 
 app.set("view engine","ejs")
 app.set("views", path.join(__dirname,"views"))
@@ -47,12 +52,31 @@ app.use(session({
 
 app.use(flash())
 
+//after session we define passport middleware
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success")
     res.locals.error=req.flash("error")
+    res.locals.currUser=req.user      //inside currUser variable we get loggedin or notloggedin user details
+    //we are defining currUser here because we cannot use req.user inside navbar.ejs
     next();
 })
 
+// app.get("/demouser", async (req ,res)=>{
+//     let fakeuser=new User({
+//         email:"student@gmail.com",
+//         username:"delta-student"
+//     })
+
+//     let registeredUser= await User.register(fakeuser, "helloworld")
+//     res.send(registeredUser)
+// })
 
 // app.get("/testListing", async (req,res)=>{
 //     let sampleListing=new Listing({
@@ -95,7 +119,9 @@ app.get("/", (req,res)=>{
 })
 
 
-app.use("/listings", listings)
+
+app.use("/listings", listingRouter)
+app.use("/", userRouter)
 
 
 //index.ejs route
@@ -175,7 +201,7 @@ app.use("/listings", listings)
 
 
 
-app.use("/listings/:id/reviews",reviews)
+app.use("/listings/:id/reviews",reviewRouter)
 
 //reviews
 //saving the reviews
