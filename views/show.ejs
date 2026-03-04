@@ -5,7 +5,7 @@
             <div class="col col-6 offset-2 ">
                 <h3 class="mb-3"><%= listing.title %></h3>
                 <div class="card show-card listing-card">
-                    <img src="<%= listing.image %>" class="card-img-top" alt="listing_image">
+                    <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image">
                     
                     <div class="card-body">
                         
@@ -66,11 +66,13 @@
                     </form>
                     <% } %>
                 </div>
+                
+
+
+                <% if(listing.reviews.length>0) {%>
                 <hr>
-
-
-                <h4>All Reviews</h4>
                 <div class="row">
+                    <h4>All Reviews</h4>
                     <% for(let review of listing.reviews) {%>
                         <div class="col-5 card ms-4 mb-1 mt-1">
                                 <div class="card-body">
@@ -85,7 +87,7 @@
                         
                     <% } %>
                 </div>
-
+                <% } %>
 
             </div>
         </div>

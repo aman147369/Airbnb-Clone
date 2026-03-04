@@ -11,9 +11,13 @@ const listingSchema= new Schema({
     },
     description:String,
     image:{
-        type:String,
-        default:"https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=",
-        set:(v)=> v==="" ?"https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=":v,
+
+        url:String,
+        filename:String,
+
+        // type:String,
+        // default:"https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=",
+        // set:(v)=> v==="" ?"https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=":v,
     },
     price:Number,
     location:String,
@@ -27,6 +31,10 @@ const listingSchema= new Schema({
     owner:{
         type: Schema.Types.ObjectId,
         ref: "User"
+    },
+    category:{
+        type:String,
+        enum:["Trending","Rooms","Iconic Cities","Mountains","Castles","Amazing Pools","Camping","Farms","Artic"]
     }
 })
 

@@ -4,7 +4,7 @@
         <div class="row mt-3">
             <div class="col-8 offset-2">
                 <h3 class="mb-3">Edit your Listing</h3>
-                <form action="/listings/<%= listing._id %>?_method=PUT" method="post" novalidate class="needs-validation">
+                <form action="/listings/<%= listing._id %>?_method=PUT" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
                         <input type="text" name="listing[title]" id="title" value="<%= listing.title %>" class="form-control">
@@ -15,10 +15,15 @@
                         <textarea name="listing[description]" id="description" class="form-control"><%= listing.description %></textarea>
                         <div class="invalid-feedback">Please give short description</div>
                     </div>
+
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image Link</label>
-                        <input type="text" name="listing[image]" id="image" value="<%= listing.image %>" class="form-control">
-                        <div class="invalid-feedback">Please enter valid link for Image</div>
+                        Original Listing Image<br/>
+                        <img src="<%= originalImageUrl %>" alt=""/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload New Image</label>
+                        <input type="file" name="listing[image]" id="image" class="form-control">
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
@@ -38,6 +43,22 @@
                         <input type="text" name="listing[country]" id="country" value="<%= listing.country %>" class="form-control" required>
                         <div class="invalid-feedback">Country name should be valid</div>
                         <br>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="listing[category]" id="category" class="form-select">
+                            <option value="" disabled selected><%= listing.category %></option>
+                            <option value="Trending">Trending</option>
+                            <option value="Rooms">Rooms</option>
+                            <option value="Iconic Cities">Iconic Cities</option>
+                            <option value="Mountains">Mountain</option>
+                            <option value="Castles">Castles</option>
+                            <option value="Amazing Pools">Amazing Pools</option>
+                            <option value="Camping">Camping</option>
+                            <option value="Farms">Farms</option>
+                            <option value="Artic">Artic</option>
+                        </select>
                     </div>
                     
                     <button class="btn btn-dark mb-3" style="border: none; background-color: #fe424d;">Edit</button>

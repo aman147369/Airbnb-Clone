@@ -8,6 +8,10 @@ const { isLoggedIn, isOwner }=require("../middleware.js")
 
 const listingController=require("../controllers/listing.js")
 
+const multer=require("multer")
+const {storage}=require("../cloudConfig.js")
+const upload=multer({ storage })
+
 const validateListing=(req,res,next)=>{
     let {error}=listingSchema.validate(req.body)
     if(error){
@@ -23,7 +27,8 @@ const validateListing=(req,res,next)=>{
 
 router.route("/")
 .get(wrapAsync(listingController.index))
-.post(isLoggedIn ,validateListing ,wrapAsync(listingController.createListing) )
+.post(isLoggedIn , upload.single("listing[image]"), validateListing ,wrapAsync(listingController.createListing) )
+
 
 
 //index.ejs route
@@ -31,6 +36,19 @@ router.route("/")
 
 //show from to create new listing, here we are using isLoggedIn middleware to check whether user is registered in passport
 router.get("/new", isLoggedIn , listingController.renderNewForm)
+
+router.get("/search", async(req,res)=>{
+    let {country}=req.query
+    let search={}
+    if(country){
+        search.country={
+            $regex: country,
+            $options: "i"
+        };
+    }
+    const allListings=await Listing.find(search)
+    res.render("index.ejs", {allListings})
+})
 
 //showing all the details of a single listing
 //Without populate() → You only get comment IDs.
@@ -44,7 +62,7 @@ router.get("/:id", wrapAsync( listingController.showListing ) )
 router.get("/:id/edit", isLoggedIn, isOwner ,wrapAsync(listingController.renderEditForm))
 
 //updating the listing
-router.put("/:id", isLoggedIn, isOwner ,validateListing ,wrapAsync(listingController.updateListing))
+router.put("/:id", isLoggedIn, isOwner ,upload.single("listing[image]")  ,validateListing ,wrapAsync(listingController.updateListing))
 
 //delete listing
 //when listing is deleted then findOneAndDelete middleware function will be called

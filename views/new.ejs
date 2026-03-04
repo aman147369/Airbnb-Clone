@@ -5,7 +5,7 @@
             <div class="col-8 offset-2">
                 <br>
                 <h3>Create a New Listing</h3><br>
-                <form action="/listings" method="post" novalidate class="needs-validation">
+                <form action="/listings" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
                         <input type="text" name="listing[title]" placeholder="Add a catchy title" id="title" class="form-control" required>
@@ -17,10 +17,10 @@
                             class="form-control" required></textarea>
                         <div class="invalid-feedback">Please give short description</div>
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image Link</label>
-                        <input type="text" name="listing[image]" id="image" placeholder="attach image URL/Link"
-                            class="form-control">
+                        <label for="image" class="form-label">Upload Listing Image</label>
+                        <input type="file" name="listing[image]" id="image" class="form-control" required>
                     </div>
 
                     <div class="row">
@@ -42,12 +42,28 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    <div>
                         <label for="country" class="form-label">Country</label>
                         <input type="text" id="country" name="listing[country]" placeholder="India"
                             class="form-control" required>
                         <div class="invalid-feedback">Country name should be valid</div>
                         <br>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="listing[category]" id="category" class="form-select">
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Trending">Trending</option>
+                            <option value="Rooms">Rooms</option>
+                            <option value="Iconic Cities">Iconic Cities</option>
+                            <option value="Mountains">Mountain</option>
+                            <option value="Castles">Castles</option>
+                            <option value="Amazing Pools">Amazing Pools</option>
+                            <option value="Camping">Camping</option>
+                            <option value="Farms">Farms</option>
+                            <option value="Artic">Artic</option>
+                        </select>
                     </div>
 
                     <button class="btn btn-dark" style="border: none; background-color: #fe424d;">Add</button>
